@@ -12,10 +12,18 @@ npm install alfabank-wrapper
 
 Usage:
 ```
-const alfabank = require('alfabank-wrapper').;
+const alfabank = require('alfabank-wrapper');
 
 let pay_object = new alfabank.Alfabank('Your private token', 'Language code'); //Only 'ru' and 'en' supported at tihs time
+```
+or
+```
+const alfabank = require('alfabank-wrapper').Alfabank;
 
+let pay_object = new alfabank('Your private token', 'Language code'); //Only 'ru' and 'en' supported at tihs time
+```
+and then execute command:
+```
 pay_object.execute('register', {orderNumber : '000-000000'}, (err, data) => {
 	if (err) {
 		console.log('!Error:', err);
