@@ -53,8 +53,7 @@ unBindCard
 refund
 bindCard
 ```
-Command parameters:
-Each command required it's own parameters set. For example command 'register' required folowed parameters:
+Each command required it's own parameters set. For example command 'register' required following parameters:
 ```
 {
 	returnUrl : 'Full URL to successful payment includes protocol',
