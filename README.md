@@ -14,7 +14,7 @@ Usage:
 ```
 const alfabank = require('alfabank-wrapper').;
 
-let pay_object = new alfabank.Alfabank('Your private token', 'en');
+let pay_object = new alfabank.Alfabank('Your private token', 'Language code'); //Only 'ru' and 'en' supported at tihs time
 
 pay_object.execute('register', {orderNumber : '000-000000'}, (err, data) => {
 	if (err) {
