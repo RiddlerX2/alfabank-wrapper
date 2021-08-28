@@ -33,3 +33,23 @@ pay_object.executePromise('register', {orderNumber : '000-000000'})
 	});
 
 ```
+
+Available commands for execution:
+```
+registerPreAuth 
+register
+getOrderStatusExtended
+getLastOrdersForMerchants
+getBindingsByCardOrId
+getBindings
+getOrderStatus
+verifyEnrollment
+paymentOrderBinding
+reverse
+paymentotherway
+deposit
+addParams
+unBindCard
+refund
+bindCard
+```
