@@ -22,7 +22,7 @@ const alfabank = require('alfabank-wrapper').Alfabank;
 
 let pay_object = new alfabank('Your private token', 'Language code'); //Only 'ru' and 'en' supported at tihs time
 ```
-and then execute command:
+and then execute command with callback:
 ```
 pay_object.execute('register', {orderNumber : '000-000000'}, (err, data) => {
 	if (err) {
@@ -31,7 +31,9 @@ pay_object.execute('register', {orderNumber : '000-000000'}, (err, data) => {
 		console.log(data);
 	}
 });
-
+```
+or execute command with promise:
+```
 pay_object.executePromise('register', {orderNumber : '000-000000'})
 	.then((data) => {
 		console.log(data);
