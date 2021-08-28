@@ -1,0 +1,15 @@
+{
+  "name": "alfabank-wrapper",
+  "version": "1.0.3",
+  "description": "Unified wrapper for Alfabank e-commerce banking functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+	"dependencies": {
+		"axios": "^0.21.1"
+	}
+}
