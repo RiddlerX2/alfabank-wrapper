@@ -7,7 +7,7 @@ Actual information about [Alfabank REST API](https://pay.alfabank.ru/ecommerce/i
 
 Requirements:
 ```
-Node.JS 14.0.0 or above
+Node.JS 13.6.0 or above
 Axios 0.21.1 or above
 ```
 
