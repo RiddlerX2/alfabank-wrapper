@@ -5,6 +5,12 @@ You can use it depends on your programming style.
 
 Actual information about [Alfabank REST API](https://pay.alfabank.ru/ecommerce/instructions/merchantManual/pages/index/rest.html)
 
+Requirements:
+```
+Node.JS 14.0.0 or above
+Axios 7.1.1 or above
+```
+
 Install:
 ```
 npm install alfabank-wrapper
