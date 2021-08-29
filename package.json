@@ -1,6 +1,6 @@
 {
   "name": "alfabank-wrapper",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Unified wrapper for Alfabank e-commerce banking functions",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
 		"url": "https://github.com/RiddlerX2/alfabank-wrapper"
 	},
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=13.6.0"
   },
 	"dependencies": {
 		"axios": "^0.21.1"
