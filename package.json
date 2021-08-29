@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ['Alfabank', 'Card', 'Payment', 'E-Commerce'],
+  "keywords": ["Alfabank", "Card", "Payment", "E-Commerce"],
   "author": "RiddlerX2",
   "license": "GNU v3",
 	"repository": {
