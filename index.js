@@ -26,13 +26,17 @@ const messages = {
 /*Main class*/
 class Alfabank {
 	#token;
+	#username;
+	#password;
 	#language;
 	/*Default REST point of Alfabank*/
 	execURLPrefix = `https://web.rbsuat.com/ab/rest/`;
 	execURLSuffix = `.do`;
 	/*Initialise class with "new"*/
-	constructor (token, language, execURLPrefix, execURLSuffix) {
+	constructor (token, language, username, password, execURLPrefix, execURLSuffix) {
 		this.#token = token;
+		this.#username = username;
+		this.#password = password;
 		this.#language = language;
 		/*If URLs not defines use default values*/
 		if (execURLPrefix) {
@@ -82,6 +86,8 @@ class Alfabank {
 		} else {
 			/*Extend parameters by adding authorization token*/
 			params.token = this.#token;
+			params.userName = this.#username;
+			params.password = this.#password;
 			/*Send data to server*/
 			axios({
 				method : 'POST', //as described in documentation (link above)
