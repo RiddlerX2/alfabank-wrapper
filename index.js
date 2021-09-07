@@ -14,14 +14,37 @@ const messages = {
 	ru : {
 		operation_error : 'Указанная операция не определена в документации банка',
 		params_invalid : 'Параметры должны быть переданы в виде объекта',
-		callback_invalid : 'Требуется функция обратного вызова'
+		callback_invalid : 'Требуется функция обратного вызова',
+		value_invalid : 'Параметр должен быть указан',
+		value_type_invalid : 'Некорректный тип данных '
 	},
 	en : {
 		operation_error : 'The specified operation is not defined in the banks documentation',
 		params_invalid : 'Parameters must be passed as an object',
-		callback_invalid : 'Callback function required'
+		callback_invalid : 'Callback function required',
+		value_invalid : 'Value must be specified',
+		value_type_invalid : 'Value type is incorrect '
 	}
 }
+
+const commands = [
+	'registerPreAuth', 
+	'register',
+	'getOrderStatusExtended',
+	'getLastOrdersForMerchants',
+	'getBindingsByCardOrId',
+	'getBindings',
+	'getOrderStatus',
+	'verifyEnrollment',
+	'paymentOrderBinding',
+	'reverse',
+	'paymentotherway',
+	'deposit',
+	'addParams',
+	'unBindCard',
+	'refund',
+	'bindCard'
+];
 
 /*Main class*/
 class Alfabank {
@@ -63,24 +86,7 @@ class Alfabank {
 		} else if (!this.isObject(params) || this.isArray(params)) {
 			callback(messages[this.#language].params_invalid, false);
 		} else if (
-			![
-				'registerPreAuth', 
-				'register',
-				'getOrderStatusExtended',
-				'getLastOrdersForMerchants',
-				'getBindingsByCardOrId',
-				'getBindings',
-				'getOrderStatus',
-				'verifyEnrollment',
-				'paymentOrderBinding',
-				'reverse',
-				'paymentotherway',
-				'deposit',
-				'addParams',
-				'unBindCard',
-				'refund',
-				'bindCard'
-			].includes(operation)
+			!commands.includes(operation)
 		) {
 			callback(messages[this.#language].operation_error, false);
 		} else {
@@ -114,6 +120,89 @@ class Alfabank {
 	executePromise(operation, params) {
 		return new Promise((resolve, reject) => {
 			this.execute(operation, params, (error, data) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(data);
+				}
+			});
+		});
+	}
+
+	/*Basic promisified functions for most popular commands*/
+	register (token, userName, password, paymentID, paymentAmount, paymentDetails, successURL, failURL) {
+		if (typeof paymentAmount != 'number') {
+			throw messages[this.#language].value_type_invalid + 'paymentAmount';
+		} else if (!successURL) {
+			throw messages[this.#language].value_invalid + 'successURL';
+		} else if (!paymentDetails) {
+			throw messages[this.#language].value_invalid + 'paymentDetails';
+		} else if (!token && (!userName || !password)) {
+			throw messages[this.#language].value_invalid + 'token / userName, password';
+		}
+
+		let params = {
+			token : token || '',
+			userName : userName || '',
+			password : password || '',
+			returnUrl : successURL,
+			failUrl : failURL || successURL,
+			orderNumber : paymentID,
+			amount : Math.round(paymentAmount*100),
+			description : paymentDetails
+		};
+		return new Promise ((resolve, reject) => {
+			this.execute('register', params, (error, data) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(data);
+				}
+			});
+		});
+	}
+
+	getOrderStatus (token, userName, password, orderID) {
+		if (!orderID) {
+			throw messages[this.#language].value_invalid + 'orderID';
+		} else if (!token && (!userName || !password)) {
+			throw messages[this.#language].value_invalid + 'token / userName, password';
+		}
+
+		let params = {
+			token : token || '',
+			userName : userName || '',
+			password : password || '',
+			orderId : orderID
+		};
+		return new Promise ((resolve, reject) => {
+			this.execute('getOrderStatus', params, (error, data) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(data);
+				}
+			});
+		});
+	}
+
+	refund (userName, password, orderID, paymentAmount) {
+		if (typeof paymentAmount != 'number') {
+			throw messages[this.#language].value_type_invalid + 'paymentAmount';
+		} else if (!orderID) {
+			throw messages[this.#language].value_invalid + 'orderID';
+		} else if (!userName || !password) {
+			throw messages[this.#language].value_invalid + 'userName, password';
+		}
+
+		let params = {
+			userName : userName,
+			password : password,
+			orderId : orderID,
+			amount : Math.round(paymentAmount*100)
+		};
+		return new Promise ((resolve, reject) => {
+			this.execute('refund', params, (error, data) => {
 				if (error) {
 					reject(error);
 				} else {
