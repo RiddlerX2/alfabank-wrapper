@@ -16,14 +16,16 @@ const messages = {
 		params_invalid : 'Параметры должны быть переданы в виде объекта',
 		callback_invalid : 'Требуется функция обратного вызова',
 		value_invalid : 'Параметр должен быть указан',
-		value_type_invalid : 'Некорректный тип данных '
+		value_type_invalid : 'Некорректный тип данных ',
+		auth_invalid : 'Некорректные данные для авторизации необходим либо токен либо имя пользователя и пароль. Для операции возврата имя пользователя и пароль обязательны/'
 	},
 	en : {
 		operation_error : 'The specified operation is not defined in the banks documentation',
 		params_invalid : 'Parameters must be passed as an object',
 		callback_invalid : 'Callback function required',
 		value_invalid : 'Value must be specified',
-		value_type_invalid : 'Value type is incorrect '
+		value_type_invalid : 'Value type is incorrect ',
+		auth_invalid : 'Incorrect authorization data token or userName and password must be provided. For refund operation userName and password required.'
 	}
 }
 
@@ -56,11 +58,16 @@ class Alfabank {
 	execURLPrefix = `https://web.rbsuat.com/ab/rest/`;
 	execURLSuffix = `.do`;
 	/*Initialise class with "new"*/
-	constructor (token, language, username, password, execURLPrefix, execURLSuffix) {
-		this.#token = token;
-		this.#username = username;
-		this.#password = password;
+	constructor (token, language, userName, password, execURLPrefix, execURLSuffix) {
 		this.#language = language;
+
+		if (!token && (!userName || !password)) {
+			throw messages[this.#language].auth_invalid;
+		}
+
+		this.#token = token;
+		this.#username = userName;
+		this.#password = password;
 		/*If URLs not defines use default values*/
 		if (execURLPrefix) {
 			this.execURLPrefix = execURLPrefix;
@@ -91,9 +98,13 @@ class Alfabank {
 			callback(messages[this.#language].operation_error, false);
 		} else {
 			/*Extend parameters by adding authorization token*/
-			params.token = this.#token;
-			params.userName = this.#username;
-			params.password = this.#password;
+			if (this.#token) {
+				params.token = this.#token;
+			}
+			if (this.#username && this.#password) {
+				params.userName = this.#username;
+				params.password = this.#password;
+			}
 			/*Send data to server*/
 			axios({
 				method : 'POST', //as described in documentation (link above)
@@ -130,21 +141,16 @@ class Alfabank {
 	}
 
 	/*Basic promisified functions for most popular commands*/
-	register (token, userName, password, paymentID, paymentAmount, paymentDetails, successURL, failURL) {
+	register (paymentID, paymentAmount, paymentDetails, successURL, failURL) {
 		if (typeof paymentAmount != 'number') {
 			throw messages[this.#language].value_type_invalid + 'paymentAmount';
 		} else if (!successURL) {
 			throw messages[this.#language].value_invalid + 'successURL';
 		} else if (!paymentDetails) {
 			throw messages[this.#language].value_invalid + 'paymentDetails';
-		} else if (!token && (!userName || !password)) {
-			throw messages[this.#language].value_invalid + 'token / userName, password';
 		}
 
 		let params = {
-			token : token || '',
-			userName : userName || '',
-			password : password || '',
 			returnUrl : successURL,
 			failUrl : failURL || successURL,
 			orderNumber : paymentID,
@@ -162,11 +168,9 @@ class Alfabank {
 		});
 	}
 
-	getOrderStatus (token, userName, password, orderID) {
+	getOrderStatus (orderID) {
 		if (!orderID) {
 			throw messages[this.#language].value_invalid + 'orderID';
-		} else if (!token && (!userName || !password)) {
-			throw messages[this.#language].value_invalid + 'token / userName, password';
 		}
 
 		let params = {
@@ -186,18 +190,14 @@ class Alfabank {
 		});
 	}
 
-	refund (userName, password, orderID, paymentAmount) {
+	refund (orderID, paymentAmount) {
 		if (typeof paymentAmount != 'number') {
 			throw messages[this.#language].value_type_invalid + 'paymentAmount';
 		} else if (!orderID) {
 			throw messages[this.#language].value_invalid + 'orderID';
-		} else if (!userName || !password) {
-			throw messages[this.#language].value_invalid + 'userName, password';
 		}
 
 		let params = {
-			userName : userName,
-			password : password,
 			orderId : orderID,
 			amount : Math.round(paymentAmount*100)
 		};
