@@ -55,7 +55,7 @@ class Alfabank {
 	#password;
 	#language;
 	/*Default REST point of Alfabank*/
-	execURLPrefix = `https://web.rbsuat.com/ab/rest/`;
+	execURLPrefix = `https://pay.alfabank.ru/payment/rest/`;
 	execURLSuffix = `.do`;
 	/*Initialise class with "new"*/
 	constructor (token, language, userName, password, execURLPrefix, execURLSuffix) {
