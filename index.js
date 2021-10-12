@@ -174,9 +174,6 @@ class Alfabank {
 		}
 
 		let params = {
-			token : token || '',
-			userName : userName || '',
-			password : password || '',
 			orderId : orderID
 		};
 		return new Promise ((resolve, reject) => {
