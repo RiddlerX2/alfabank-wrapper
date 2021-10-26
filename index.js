@@ -113,7 +113,7 @@ class Alfabank {
 			}).then(
 				(result) => {
 					/*If operation succeeded on bank's side return data*/
-					if (!result.data.errorCode) {
+					if (!parseInt(result.data.errorCode, 10)) {
 						callback(false, result.data);
 					} else {
 						/*Else return data with description as error*/
