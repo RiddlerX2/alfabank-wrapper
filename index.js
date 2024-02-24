@@ -141,7 +141,7 @@ class Alfabank {
 	}
 
 	/*Basic promisified functions for most popular commands*/
-	register (paymentID, paymentAmount, paymentDetails, successURL, failURL) {
+	register (paymentID, paymentAmount, paymentDetails, successURL, failURL, options = {}) {
 		if (typeof paymentAmount != 'number') {
 			throw messages[this.#language].value_type_invalid + 'paymentAmount';
 		} else if (!successURL) {
@@ -157,6 +157,7 @@ class Alfabank {
 			amount : Math.round(paymentAmount*100),
 			description : paymentDetails
 		};
+		params = Object.assign(params, options);
 		return new Promise ((resolve, reject) => {
 			this.execute('register', params, (error, data) => {
 				if (error) {
